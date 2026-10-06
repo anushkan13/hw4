@@ -439,3 +439,48 @@ shows the honest "sold out" and the in-stock alternatives together.
 *Follow-ups: none.*
 
 ---
+
+## Problem 13: Push to GitHub and Submit the URL
+
+### Prompt 1 (initial)
+
+> Ok, Problem 13: Push to GitHub and Submit the URL:
+>
+> Push the project to a public GitHub repo for submission, in a repo named hw4, matching
+> this layout:
+>
+> hw4/
+>   AI_prompts.md
+>   requirements.txt
+>   .env.example
+>   .gitignore
+>   README.md
+>   frontend/            (the Vite React TypeScript app)
+>   backend/             (main.py, agent.py, models.py, tools.py, prompts/prompt.md)
+>   output/              (harness.md, design.md, usability.md, app_check.html,
+>                         app_check_images/, audit_trail.json)
+>
+> Do not commit secrets or data. Keep .env, data/campus_customs.db, and the product images
+> (data/products/) out of git with .gitignore. The data pack (data/campus_customs.db and
+> data/products/) stays local only.
+>
+> Add a .env.example with the variable names and placeholder values only, no real keys (for
+> example PORTKEY_API_KEY and anything else the app reads).
+>
+> Write README.md explaining how to run the app after someone clones it and drops the data
+> pack into data/: installing backend and frontend dependencies, creating .env from
+> .env.example, starting the backend (uvicorn main:app --reload --port 8000 from the backend
+> folder), and starting the frontend dev server. Clear enough for a grader to clone and run.
+>
+> Before pushing, verify that git is not tracking and has never committed any of these: .env,
+> data/campus_customs.db, data/products/, the session secret file, node_modules, or the
+> virtualenv. If any were committed in an earlier commit, fix the history so they're gone,
+> not just gitignored now. Confirm .env.example has placeholders only.
+>
+> Then create the public repo and push, and give me the repo URL.
+
+*Follow-ups: none.*
+
+**Repo:** https://github.com/anushkan13/hw4
+
+---
