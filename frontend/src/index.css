@@ -1,0 +1,695 @@
+/* Campus Customs — "heritage varsity" design system.
+   Yale navy and white, warmed with gold and cream; a classic serif for headings,
+   a slab display for the logo and hero, Inter for body copy. */
+
+:root {
+  /* --- navy, with real depth rather than one flat blue --- */
+  --navy: #00356b;          /* Yale navy, the brand anchor */
+  --navy-deep: #001f3f;     /* hero and footer grounds */
+  --navy-mid: #013a73;      /* gradient midpoint */
+  --navy-soft: #e6edf6;     /* tinted surfaces */
+  --navy-line: #c9d7e8;
+
+  /* --- warm gold + cream, the heritage half of the palette --- */
+  --gold: #c8a04a;          /* accent: rules, collar, hovers */
+  --gold-bright: #e9c877;   /* on navy, where gold needs to lift */
+  --gold-soft: #f6edd8;     /* tags and chips */
+  --gold-ink: #8a6d24;      /* gold text that still passes contrast */
+  --cream: #faf6ee;         /* page warmth, product backdrops */
+  --cream-deep: #efe7d8;
+
+  --white: #ffffff;
+  --ivory: #f7f8fa;
+  --ink: #15202b;
+  --muted: #5b6b7c;
+  --line: #e3e8ef;
+
+  --radius: 12px;
+  --radius-lg: 18px;
+
+  /* Shadows are navy-tinted, not grey, so depth reads as part of the palette. */
+  --shadow-sm: 0 1px 2px rgba(0, 31, 63, 0.05), 0 2px 10px rgba(0, 31, 63, 0.05);
+  --shadow-md: 0 10px 30px rgba(0, 31, 63, 0.13);
+  --shadow-lg: 0 20px 48px rgba(0, 31, 63, 0.2);
+
+  --display: "Alfa Slab One", Georgia, serif;
+  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --fast: 0.18s var(--ease);
+  --slow: 0.42s var(--ease);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-family: var(--serif); letter-spacing: -0.015em; }
+
+.app { display: flex; flex-direction: column; min-height: 100%; }
+.container { width: min(1180px, 92vw); margin: 0 auto; }
+main { flex: 1; }
+
+/* ---------- motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop  { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+
+/* Honour a shopper's reduced-motion setting: keep the design, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- nav ---------- */
+.navbar {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color: var(--white);
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 20px rgba(0, 31, 63, 0.18);
+}
+/* The gold rule under the bar is the site's signature detail; it repeats on the
+   hero headline, the chat header, and the footer. */
+.navbar::after {
+  content: ""; display: block; height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+}
+.navbar .container {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; height: 74px;
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: var(--white); color: var(--navy);
+  display: grid; place-items: center;
+  box-shadow: 0 2px 12px rgba(0, 31, 63, 0.3);
+  transition: transform var(--fast);
+}
+/* Handsome Dan tips his head when you hover the logo. */
+.brand:hover .brand-mark { transform: rotate(-7deg) scale(1.06); }
+.brand-name {
+  font-family: var(--display); font-size: 19px; font-weight: 400;
+  letter-spacing: 0.015em; line-height: 1.1;
+}
+.brand-tag {
+  display: block; font-family: var(--sans); font-size: 9.5px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold-bright);
+  margin-top: 3px;
+}
+.nav-links { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
+.nav-link {
+  position: relative; padding: 9px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: #d7e3f0;
+  transition: color var(--fast), background var(--fast);
+}
+.nav-link:hover { color: var(--white); background: rgba(255, 255, 255, 0.1); }
+.nav-link.active { color: var(--white); }
+/* Gold underline grows from the centre on hover, and stays for the active page. */
+.nav-link::after {
+  content: ""; position: absolute; left: 50%; right: 50%; bottom: 4px; height: 2px;
+  background: var(--gold-bright); border-radius: 2px;
+  transition: left var(--fast), right var(--fast);
+}
+.nav-link:hover::after, .nav-link.active::after { left: 14px; right: 14px; }
+.nav-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.22); margin: 0 10px; }
+.nav-greeting {
+  display: flex; align-items: center; gap: 7px;
+  color: var(--white); font-size: 14px; font-weight: 600; padding: 0 8px; white-space: nowrap;
+}
+.nav-logout {
+  border: 1px solid rgba(255,255,255,0.3); background: transparent;
+  cursor: pointer; font: inherit; font-size: 14px;
+}
+.nav-logout::after { content: none; }
+.nav-logout:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+.nav-cta {
+  padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600;
+  background: var(--white); color: var(--navy);
+  transition: background var(--fast), color var(--fast), transform var(--fast), box-shadow var(--fast);
+}
+.nav-cta:hover {
+  background: var(--gold-bright); color: var(--navy-deep);
+  transform: translateY(-1px); box-shadow: 0 4px 14px rgba(233, 200, 119, 0.4);
+}
+
+/* ---------- generic page chrome ---------- */
+.page { padding: 56px 0 84px; animation: fade var(--slow) both; }
+.page-head { max-width: 760px; margin-bottom: 32px; animation: rise var(--slow) both; }
+.eyebrow {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold-ink); font-weight: 700; margin-bottom: 12px;
+}
+.page h1 { font-size: 42px; margin: 0 0 12px; color: var(--navy); font-weight: 700; }
+.lede { font-size: 18px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ---------- home hero ---------- */
+.hero {
+  background:
+    radial-gradient(1100px 520px at 78% -10%, rgba(200, 160, 74, 0.22) 0%, transparent 62%),
+    linear-gradient(155deg, var(--navy) 0%, var(--navy-mid) 42%, var(--navy-deep) 100%);
+  color: var(--white);
+  padding: 100px 0 108px;
+  position: relative; overflow: hidden;
+}
+/* Varsity pinstripe, the kind printed inside a letterman jacket. */
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(115deg, rgba(255,255,255,0.045) 0 2px, transparent 2px 22px);
+}
+.hero::after {
+  content: ""; position: absolute; inset: auto -12% -62% auto;
+  width: 560px; height: 560px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,160,74,0.16) 0%, rgba(255,255,255,0.03) 60%, transparent 70%);
+}
+.hero .container {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 48px; align-items: center;
+}
+.hero-copy { max-width: 720px; animation: rise var(--slow) both; }
+.hero .eyebrow { color: var(--gold-bright); }
+.hero h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(42px, 6.2vw, 74px); line-height: 1.03;
+  letter-spacing: -0.005em; margin: 0;
+  text-shadow: 0 3px 24px rgba(0, 20, 40, 0.4);
+}
+/* Gold swash under the headline. */
+.hero h1::after {
+  content: ""; display: block; width: 94px; height: 5px; border-radius: 3px; margin-top: 20px;
+  background: linear-gradient(90deg, var(--gold-bright), var(--gold));
+}
+.hero h2 {
+  font-family: var(--sans); font-size: 20px; font-weight: 500;
+  color: #cfe0f0; margin: 22px 0 18px; line-height: 1.5;
+}
+.hero p { font-size: 17px; line-height: 1.75; color: #d2e0ee; margin: 0 0 34px; max-width: 660px; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* Handsome Dan, large, as the hero's brand figure. */
+.hero-mascot { position: relative; display: grid; place-items: center; animation: fade 0.8s both; }
+.hero-mascot-ring {
+  position: absolute; width: 236px; height: 236px; border-radius: 50%;
+  border: 2px dashed rgba(233, 200, 119, 0.35);
+}
+.hero-mascot-disc {
+  width: 198px; height: 198px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, rgba(255,255,255,0.15), rgba(0,31,63,0.5));
+  display: grid; place-items: center;
+  box-shadow: inset 0 0 40px rgba(0,20,40,0.5), 0 18px 44px rgba(0,16,34,0.42);
+  animation: float 7s ease-in-out infinite;
+}
+.hero-mascot-name {
+  position: absolute; bottom: -4px;
+  font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--gold-bright); font-weight: 700;
+}
+@media (max-width: 900px) {
+  .hero .container { grid-template-columns: 1fr; }
+  .hero-mascot { display: none; }
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 28px; border-radius: 10px;
+  font-size: 15px; font-weight: 600; border: 2px solid transparent;
+  cursor: pointer; font-family: var(--sans); letter-spacing: 0.01em;
+  transition: transform var(--fast), box-shadow var(--fast), background var(--fast),
+              border-color var(--fast), color var(--fast);
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  color: var(--navy-deep);
+  box-shadow: 0 6px 20px rgba(200, 160, 74, 0.34);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200, 160, 74, 0.45); }
+/* The arrow slides on hover, so the CTA reads as "go". */
+.btn-arrow { transition: transform var(--fast); }
+.btn-primary:hover .btn-arrow { transform: translateX(4px); }
+.btn-outline { border-color: rgba(255,255,255,0.45); color: var(--white); background: transparent; }
+.btn-outline:hover {
+  border-color: var(--gold-bright); color: var(--gold-bright);
+  background: rgba(233, 200, 119, 0.08); transform: translateY(-2px);
+}
+.btn-navy { background: var(--navy); color: var(--white); box-shadow: var(--shadow-sm); }
+.btn-navy:hover { background: var(--navy-deep); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn-navy:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+
+/* ---------- home pillars ---------- */
+.pillars { padding: 80px 0; background: var(--cream); border-bottom: 1px solid var(--cream-deep); }
+.pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.pillar {
+  background: var(--white); border: 1px solid var(--cream-deep); border-radius: var(--radius-lg);
+  padding: 30px 28px; box-shadow: var(--shadow-sm);
+  position: relative; overflow: hidden;
+  transition: transform var(--fast), box-shadow var(--fast);
+  animation: rise var(--slow) both;
+}
+.pillar:nth-child(2) { animation-delay: 0.08s; }
+.pillar:nth-child(3) { animation-delay: 0.16s; }
+.pillar::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transform: scaleX(0); transform-origin: left; transition: transform var(--slow);
+}
+.pillar:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.pillar:hover::before { transform: scaleX(1); }
+.pillar h3 { margin: 0 0 10px; font-size: 20px; color: var(--navy); }
+.pillar p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+@media (max-width: 800px) { .pillar-grid { grid-template-columns: 1fr; } }
+
+/* ---------- products toolbar ---------- */
+.toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+.toolbar-secondary { margin-bottom: 30px; }
+.toolbar-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-right: 2px;
+}
+.sort-group { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.sort-select {
+  font: inherit; font-size: 13px; color: var(--navy); background: var(--white);
+  border: 1px solid var(--cream-deep); border-radius: 999px; padding: 8px 13px; cursor: pointer;
+  transition: border-color var(--fast);
+}
+.sort-select:hover { border-color: var(--gold); }
+.sort-select:focus { outline: 2px solid var(--navy); outline-offset: -1px; }
+.search-input {
+  flex: 1 1 240px; max-width: 320px; padding: 11px 15px;
+  border: 1px solid var(--cream-deep); border-radius: 999px; font-size: 14px;
+  font-family: var(--sans); color: var(--ink); background: var(--white);
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.search-input:hover { border-color: var(--gold); }
+.search-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px var(--navy-soft); }
+.chip {
+  padding: 8px 15px; border-radius: 999px; border: 1px solid var(--cream-deep);
+  background: var(--white); color: var(--muted); font-size: 13px;
+  font-weight: 500; cursor: pointer; font-family: var(--sans);
+  transition: all var(--fast);
+}
+.chip:hover { border-color: var(--gold); color: var(--navy); background: var(--gold-soft); transform: translateY(-1px); }
+.chip.active {
+  background: var(--navy); border-color: var(--navy); color: var(--white);
+  box-shadow: 0 3px 10px rgba(0, 53, 107, 0.25);
+}
+.chip.active:hover { background: var(--navy-deep); color: var(--white); }
+.result-count { margin-left: auto; font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* ---------- product grid ---------- */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 26px; }
+.product-card {
+  display: flex; flex-direction: column; position: relative;
+  background: var(--white); border: 1px solid var(--cream-deep); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-sm);
+  transition: transform var(--fast), box-shadow var(--fast), border-color var(--fast);
+  animation: rise var(--slow) both;
+}
+.product-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
+/* Gold rule wipes across the top edge as the card lifts. */
+.product-card::after {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transform: scaleX(0); transform-origin: left; transition: transform var(--slow);
+}
+.product-card:hover::after { transform: scaleX(1); }
+
+/* The catalogue photos have genuinely mixed backgrounds: 28 are shot on white, 43
+   on black, the rest on grey or a set. Nothing can be done about that per-photo
+   without re-shooting, so uniformity comes from identical *framing* instead — every
+   photo sits in the same square, cream-matted, rounded tile with the same inner
+   ring. The grid reads as one deliberate set rather than a scrapbook. */
+.product-thumb {
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(170deg, var(--white) 0%, var(--cream) 100%);
+  padding: 13px; overflow: hidden;
+  border-bottom: 1px solid var(--cream-deep);
+}
+.product-thumb img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(0, 31, 63, 0.08);
+  transition: transform var(--slow);
+}
+.product-card:hover .product-thumb img { transform: scale(1.07); }
+.product-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.product-cat {
+  align-self: flex-start;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-ink); font-weight: 700;
+  background: var(--gold-soft); border-radius: 999px; padding: 4px 10px;
+}
+.product-name { font-family: var(--serif); font-size: 17px; font-weight: 700; color: var(--navy); margin: 0; line-height: 1.35; }
+.product-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin: 0; flex: 1; }
+.product-price { font-size: 18px; font-weight: 700; color: var(--navy-deep); font-variant-numeric: tabular-nums; }
+
+/* ---------- product detail ---------- */
+.back-link {
+  font-size: 14px; color: var(--muted); display: inline-block; margin-bottom: 24px;
+  transition: color var(--fast), transform var(--fast);
+}
+.back-link:hover { color: var(--navy); transform: translateX(-3px); }
+.detail { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: start; }
+.detail > * { animation: rise var(--slow) both; }
+.detail > *:last-child { animation-delay: 0.1s; }
+.detail-image {
+  background: linear-gradient(170deg, var(--white) 0%, var(--cream) 100%);
+  border: 1px solid var(--cream-deep); border-radius: var(--radius-lg);
+  overflow: hidden; aspect-ratio: 1 / 1; padding: 22px;
+  box-shadow: var(--shadow-md); position: relative;
+}
+/* Gold corner brackets: a framed, gallery-like presentation. */
+.detail-image::before, .detail-image::after {
+  content: ""; position: absolute; width: 26px; height: 26px;
+  border: 2px solid var(--gold); opacity: 0.55;
+}
+.detail-image::before { top: 7px; left: 7px; border-right: none; border-bottom: none; z-index: 2; }
+.detail-image::after { bottom: 7px; right: 7px; border-left: none; border-top: none; z-index: 2; }
+.detail-image img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(0, 31, 63, 0.08);
+}
+.detail h1 { font-size: 36px; margin: 8px 0 14px; color: var(--navy); }
+.detail-price { font-size: 30px; font-weight: 700; margin-bottom: 22px; color: var(--navy-deep); font-variant-numeric: tabular-nums; }
+.detail-desc {
+  font-size: 16px; line-height: 1.8; color: var(--ink); margin: 0 0 30px;
+  padding-left: 16px; border-left: 3px solid var(--gold-soft);
+}
+.detail-section { margin-bottom: 28px; }
+.detail-section h3 {
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 700;
+}
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  padding: 6px 13px; border-radius: 999px; background: var(--navy-soft);
+  color: var(--navy); font-size: 12px; font-weight: 500;
+  transition: background var(--fast), color var(--fast);
+}
+.tag:hover { background: var(--gold-soft); color: var(--gold-ink); }
+.size-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.size-box {
+  min-width: 72px; padding: 11px 13px; border: 1px solid var(--navy-line);
+  border-radius: 10px; text-align: center; background: var(--white);
+  transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast);
+}
+.size-box:not(.out):hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: var(--shadow-sm); }
+.size-box.out { background: var(--ivory); border-style: dashed; }
+.size-label { font-weight: 700; font-size: 15px; display: block; color: var(--navy); }
+.size-stock { font-size: 11px; color: var(--muted); }
+.size-box.out .size-label { color: var(--muted); }
+.size-box.out .size-stock { color: #a33; }
+.stock-note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+@media (max-width: 860px) { .detail { grid-template-columns: 1fr; gap: 32px; } }
+
+/* ---------- about ---------- */
+.prose { max-width: 720px; animation: rise var(--slow) both; }
+.prose p { font-size: 17px; line-height: 1.85; color: var(--ink); margin: 0 0 22px; }
+.prose p:first-of-type::first-letter {
+  font-family: var(--display); font-size: 58px; float: left;
+  line-height: 0.82; padding: 6px 12px 0 0; color: var(--navy);
+}
+
+/* ---------- auth ---------- */
+.auth-wrap { padding: 64px 0 96px; display: grid; place-items: center; }
+.auth-card {
+  width: min(440px, 92vw); background: var(--white);
+  border: 1px solid var(--cream-deep); border-radius: var(--radius-lg);
+  padding: 38px 34px; box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+  animation: rise var(--slow) both;
+}
+.auth-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+}
+.auth-card h1 { font-size: 30px; margin: 0 0 6px; color: var(--navy); text-align: center; }
+.auth-sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 26px; }
+.field { display: flex; flex-direction: column; margin-bottom: 16px; }
+.field label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 7px;
+}
+.field input {
+  padding: 11px 14px; border: 1px solid var(--cream-deep); border-radius: 9px;
+  font-size: 15px; font-family: var(--sans); color: var(--ink); background: var(--white);
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.field input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px var(--navy-soft); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.auth-card .btn { width: 100%; margin-top: 8px; justify-content: center; }
+.auth-foot { text-align: center; font-size: 14px; color: var(--muted); margin: 22px 0 0; }
+.auth-foot a { color: var(--navy); font-weight: 600; border-bottom: 1px solid var(--gold); }
+.notice {
+  margin-top: 18px; padding: 11px 14px; border-radius: 9px;
+  background: var(--navy-soft); color: var(--navy); font-size: 13px; line-height: 1.5;
+  animation: pop 0.25s var(--ease) both;
+}
+.notice-error { background: #fdf0f0; border: 1px solid #f0d0d0; color: #8a2b2b; }
+
+/* ---------- states ---------- */
+.state { padding: 64px 0; text-align: center; color: var(--muted); }
+.state-error {
+  max-width: 560px; margin: 0 auto; padding: 22px; border-radius: 12px;
+  background: #fdf0f0; border: 1px solid #f0d0d0; color: #8a2b2b;
+  text-align: left; font-size: 14px; line-height: 1.6;
+}
+.skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 26px; }
+.skeleton {
+  background: var(--white); border: 1px solid var(--cream-deep);
+  border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sm);
+}
+.skeleton-thumb { aspect-ratio: 1 / 1; border-radius: 12px; margin-bottom: 14px; }
+.skeleton-line { height: 11px; border-radius: 6px; margin-bottom: 9px; }
+.skeleton-thumb, .skeleton-line {
+  background: linear-gradient(90deg, var(--cream) 0%, var(--cream-deep) 40%, var(--cream) 80%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+/* ---------- chat ---------- */
+.chat-fab {
+  position: fixed; right: 26px; bottom: 26px; z-index: 60;
+  width: 62px; height: 62px; border-radius: 50%; cursor: pointer;
+  background: linear-gradient(140deg, var(--navy) 0%, var(--navy-deep) 100%);
+  border: 2px solid var(--gold); color: var(--white);
+  display: grid; place-items: center;
+  box-shadow: 0 10px 28px rgba(0, 31, 63, 0.4);
+  transition: transform var(--fast), box-shadow var(--fast);
+  animation: pop 0.4s var(--ease) both;
+}
+.chat-fab:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 14px 34px rgba(0, 31, 63, 0.5); }
+/* A gold halo pulses once a second so the assistant is noticed without nagging. */
+.chat-fab::after {
+  content: ""; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--gold); opacity: 0; animation: halo 2.6s ease-out infinite;
+}
+@keyframes halo {
+  0% { transform: scale(0.92); opacity: 0.55; }
+  70%, 100% { transform: scale(1.18); opacity: 0; }
+}
+
+.chat-panel {
+  position: fixed; right: 26px; bottom: 26px; z-index: 61;
+  width: min(378px, calc(100vw - 36px)); height: min(560px, calc(100vh - 110px));
+  background: var(--white); border: 1px solid var(--cream-deep); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden;
+  animation: pop 0.26s var(--ease) both;
+}
+.chat-head {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color: var(--white); padding: 13px 15px; position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.chat-head::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+}
+.chat-head-id { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.chat-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(233, 200, 119, 0.55);
+  display: grid; place-items: center; color: var(--white);
+}
+.chat-head strong { font-family: var(--serif); font-size: 15px; display: block; }
+.chat-head span { display: block; font-size: 11px; color: #a8c2de; }
+.chat-close {
+  background: transparent; border: none; color: #cfe0f0; font-size: 20px;
+  cursor: pointer; line-height: 1; padding: 2px 7px; border-radius: 7px;
+  transition: color var(--fast), background var(--fast);
+}
+.chat-close:hover { color: var(--white); background: rgba(255,255,255,0.14); }
+.chat-context {
+  font-size: 11px; color: var(--gold-ink); padding: 7px 16px; margin: 0; font-weight: 500;
+  background: var(--gold-soft); border-bottom: 1px solid var(--cream-deep);
+}
+
+/* min-height:0 is required: without it a flex child refuses to shrink below its
+   content, so the scroll area collapses once the conversation gets long. */
+.chat-log {
+  flex: 1; min-height: 0; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 13px;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--ivory) 100%);
+}
+.bubble {
+  max-width: 82%; padding: 10px 13px; border-radius: 14px;
+  font-size: 14px; line-height: 1.55; animation: pop 0.3s var(--ease) both;
+}
+.bubble.bot {
+  background: var(--white); border: 1px solid var(--cream-deep);
+  align-self: flex-start; border-bottom-left-radius: 5px; box-shadow: var(--shadow-sm);
+}
+.bubble.me {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color: var(--white); align-self: flex-end; border-bottom-right-radius: 5px;
+  box-shadow: 0 3px 12px rgba(0, 31, 63, 0.22);
+}
+.bubble.failed { background: #fdf0f0; border-color: #f0d0d0; color: #8a2b2b; }
+
+/* Each turn is a column so the bubble and its product cards line up on the same side. */
+.chat-row { display: flex; flex-direction: column; gap: 8px; position: relative; }
+.chat-row.me { align-items: flex-end; }
+.chat-row.bot { align-items: flex-start; padding-left: 36px; }
+.chat-row .bubble { max-width: 100%; }
+/* Handsome Dan sits beside everything he says, so the assistant has a face. */
+.chat-bot-avatar {
+  position: absolute; left: 0; top: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--navy); color: var(--white);
+  display: grid; place-items: center;
+  border: 1.5px solid var(--gold); box-shadow: var(--shadow-sm);
+}
+
+.bubble.typing { display: flex; gap: 5px; align-items: center; padding: 14px; }
+.bubble.typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+  animation: chat-blink 1.2s infinite ease-in-out;
+}
+.bubble.typing span:nth-child(2) { animation-delay: 0.2s; }
+.bubble.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes chat-blink {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+.chat-cards { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.chat-card {
+  display: flex; gap: 10px; align-items: center; padding: 7px;
+  background: var(--white); border: 1px solid var(--cream-deep); border-radius: 12px;
+  color: inherit; animation: pop 0.3s var(--ease) both;
+  transition: border-color var(--fast), transform var(--fast), box-shadow var(--fast);
+}
+.chat-card:hover { border-color: var(--gold); transform: translateX(3px); box-shadow: var(--shadow-sm); }
+.chat-card img {
+  width: 48px; height: 48px; object-fit: cover; border-radius: 9px; flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 31, 63, 0.08);
+}
+.chat-card-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.chat-card-name { font-size: 13px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+.chat-card-price { font-size: 12px; font-weight: 700; color: var(--navy-deep); }
+.chat-card-sizes { font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+.chat-card-sizes.out { color: #8a2b2b; }
+
+.chat-starters { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; padding-left: 36px; }
+.chat-starters-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-ink);
+}
+.chat-starter {
+  font: inherit; font-size: 13px; text-align: left; line-height: 1.35;
+  background: var(--white); color: var(--navy); border: 1px solid var(--gold-soft);
+  border-radius: 999px; padding: 8px 14px; cursor: pointer; box-shadow: var(--shadow-sm);
+  animation: pop 0.3s var(--ease) both;
+  transition: background var(--fast), border-color var(--fast), transform var(--fast);
+}
+.chat-starter:nth-of-type(2) { animation-delay: 0.06s; }
+.chat-starter:nth-of-type(3) { animation-delay: 0.12s; }
+.chat-starter:hover { background: var(--gold-soft); border-color: var(--gold); transform: translateX(3px); }
+
+.chat-form {
+  display: flex; gap: 8px; padding: 12px; background: var(--white);
+  border-top: 1px solid var(--cream-deep);
+}
+.chat-form input {
+  flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid var(--cream-deep);
+  border-radius: 999px; font-size: 14px; font-family: var(--sans); color: var(--ink);
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.chat-form input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px var(--navy-soft); }
+.chat-send {
+  padding: 10px 18px; border-radius: 999px; border: none; cursor: pointer;
+  background: var(--navy); color: var(--white); font-size: 14px; font-weight: 600;
+  font-family: var(--sans); transition: background var(--fast), transform var(--fast);
+}
+.chat-send:hover:not(:disabled) { background: var(--navy-deep); transform: translateY(-1px); }
+.chat-send:disabled { background: var(--navy-line); color: var(--white); cursor: default; }
+
+/* ---------- footer ---------- */
+.footer {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+  color: #cfe0f0; padding: 44px 0 36px; position: relative;
+}
+.footer::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+}
+.footer .container {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 26px; flex-wrap: wrap;
+}
+.footer-brand { display: flex; align-items: center; gap: 13px; }
+.footer-mark {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(233, 200, 119, 0.45);
+  display: grid; place-items: center; color: var(--white);
+}
+.footer-name {
+  font-family: var(--display); font-size: 17px; color: var(--white);
+  letter-spacing: 0.015em; display: block;
+}
+.footer-line { font-size: 13px; color: var(--gold-bright); font-style: italic; margin-top: 3px; display: block; }
+.footer-haven { text-align: right; font-size: 13px; line-height: 1.75; }
+.footer-haven strong {
+  display: block; color: var(--white); font-family: var(--serif);
+  font-size: 15px; font-weight: 700; margin-bottom: 3px;
+}
+.footer-coords {
+  font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #93b1cf; margin-top: 7px; display: block;
+}
+.footer-legal {
+  margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 12px; color: #93b1cf; display: flex; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+@media (max-width: 680px) {
+  .footer .container { flex-direction: column; align-items: flex-start; }
+  .footer-haven { text-align: left; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 760px) {
+  .navbar .container { height: auto; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
+  .hero { padding: 72px 0 80px; }
+  .page h1 { font-size: 34px; }
+  .field-row { grid-template-columns: 1fr; }
+  .chat-panel { right: 12px; bottom: 12px; width: calc(100vw - 24px); height: min(76vh, 560px); }
+  .chat-fab { right: 16px; bottom: 16px; }
+}
