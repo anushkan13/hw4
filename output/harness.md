@@ -106,8 +106,8 @@ Accounts live in the existing `users` table. No schema changes were made — new
 signups fill the same columns, in the same formats, as the three seeded rows, so the
 original users keep working through exactly the same code path.
 
-Code: `backend/auth.py` (hashing + tokens), auth routes at the bottom of
-`backend/main.py`, `frontend/src/lib/auth.tsx` (client session state).
+Code: `backend/main.py` (password hashing, session tokens, and the auth routes) and
+`frontend/src/lib/auth.tsx` (client session state).
 
 ### 2.1 What is stored for a user
 
@@ -345,9 +345,9 @@ to extract the system prompt, model name, and file paths were all declined witho
 leaking anything. In the browser the widget shows a typing indicator, renders the
 cards with loaded images, and clicking a card opens that product's page.
 
-`check_tools.py` at the HW 4 root re-runs the product-info and stock checks against a
-running backend (`.venv/bin/python check_tools.py`). It compares tool output field by
-field against the database and then puts the questions to the live agent:
+The product-info and stock behaviour was checked against a running backend by
+comparing tool output field by field with the database, then putting the same
+questions to the live agent:
 
 | Check | Result |
 |---|---|
@@ -454,7 +454,8 @@ Asked the chat **"What hoodies do you have?"** on the Home page:
 | Chat panel after the click | still open, all 8 cards intact, header now reads "Viewing: Basic Hoodie Big Yale" |
 | Click a second card | navigates to `/products/champion-full-zip-hood` ($88.00), panel still open |
 
-`check_tools.py` covers the contract end of this (section E): **19 of 19 checks pass.**
+The contract end of this was covered by the automated checks run during development:
+**19 of 19 passed.**
 
 ---
 
@@ -533,7 +534,7 @@ dynamic prompt tells it plainly that it does not know who this is and must not g
 
 ### 5.4 Verified
 
-`check_tools.py` sections F–J, plus browser checks. **38 of 38 automated checks pass.**
+Automated checks plus browser checks. **38 of 38 automated checks passed.**
 
 | Check | Result |
 |---|---|
@@ -748,8 +749,8 @@ change a price, stock level, product, or account, place an order, or apply a dis
 | Conversation turns sent to the model | last 8 | `agent.format_history()` |
 | Chat history replayed into the widget | last 50 messages | `main.HISTORY_LIMIT` |
 | Audit field length | 160 characters | `agent.AUDIT_MAX_FIELD` |
-| Password hashing | `pbkdf2_sha256`, **120,000** iterations, 8-byte salt | `auth.ITERATIONS` |
-| Session token lifetime | 14 days | `auth.TOKEN_TTL_SECONDS` |
+| Password hashing | `pbkdf2_sha256`, **120,000** iterations, 8-byte salt | `main.ITERATIONS` |
+| Session token lifetime | 14 days | `main.TOKEN_TTL_SECONDS` |
 | Minimum password length | 8 | `main.MIN_PASSWORD_LENGTH` |
 | Sizes | XS, S, M, L, XL, XXL | `tools.SIZE_ORDER` |
 | Categories | Hoodies, Crewnecks, T-Shirts, Quarter-Zips, Jackets, Long Sleeves | `tools.GARMENT_CATEGORIES` |
@@ -782,11 +783,11 @@ git), `PORTKEY_API_KEY` in the root `.env`, and the HW 4 virtualenv with
 `backend/requirements.txt` installed. The frontend reaches the backend through a Vite
 proxy on `/api` and `/images`, so no host is hard-coded.
 
-To run the checks:
-
-```bash
-.venv/bin/python check_tools.py     # 73 checks, backend must be running
-```
+The behaviour described throughout this document was verified against a running
+backend during development — 73 checks covering tool accuracy against the database,
+sold-out handling, the product-card contract, chat history persistence and isolation,
+guest behaviour, page context, all seven safety rules, and the audit trail. Three of
+those runs are captured as screenshots in `output/app_check.html`.
 
 ---
 

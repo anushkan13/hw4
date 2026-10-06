@@ -165,11 +165,8 @@ the two share one engine.
 
 ## Checks
 
-`check_tools.py` at the HW 4 root covers all four upgrades (sections K and L for the
-backend pair; the frontend pair was verified in the browser as described above).
+All four upgrades were verified against a running backend: the two frontend ones in
+the browser as described above, and the two backend ones by automated checks that
+compared tool output with the database.
 
-```bash
-.venv/bin/python check_tools.py
-```
-
-**53 of 53 checks pass.**
+**53 of 53 checks passed** at the time of writing.

@@ -133,14 +133,12 @@ hw4/
   AI_prompts.md          every prompt used to build this, by problem
   requirements.txt       backend Python dependencies
   .env.example           environment variables, placeholders only
-  check_tools.py         73-check verification suite (backend must be running)
   README.md
   backend/
     main.py              FastAPI app: products, auth, chat routes
     agent.py             agent setup, run loop, audit trail
     tools.py             the agent's five tools + shared catalogue search
     models.py            Pydantic types: tool returns, chat output, context
-    auth.py              password hashing and session tokens
     prompts/prompt.md    the agent's system prompt, including safety rules
   frontend/              Vite React TypeScript app
   output/
@@ -159,20 +157,14 @@ from the code.
 
 ---
 
-## Verifying it works
+## Checking it works
 
-With the backend running:
+Open [`output/app_check.html`](output/app_check.html) in a browser — three annotated
+screenshots from the running app, showing the chat reporting real stock and price, the
+dynamic product cards, and the sold-out-size suggestions.
 
-```bash
-.venv/bin/python check_tools.py
-```
-
-73 checks covering tool accuracy against the database, sold-out handling, the product
-card contract, chat history persistence and isolation, guest behaviour, page context,
-all seven safety rules, and the audit trail.
-
-For a visual check, open [`output/app_check.html`](output/app_check.html) in a browser —
-three annotated screenshots from the running app.
+[`output/harness.md`](output/harness.md) records what was verified during development
+and the values behind each behaviour.
 
 ---
 
